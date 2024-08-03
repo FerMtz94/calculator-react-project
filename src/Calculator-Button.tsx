@@ -1,7 +1,7 @@
 type CalculatorProps = {
-  handleClick: () => unknown;
-  children: number | number[] | string;
-};
+  handleClick: (e: any) => void
+  children: number | number[] | string
+}
 
 export default function CalculatorButton({
   handleClick,
@@ -11,5 +11,5 @@ export default function CalculatorButton({
     <button className="calculator-button" onClick={handleClick}>
       {children}
     </button>
-  );
+  )
 }

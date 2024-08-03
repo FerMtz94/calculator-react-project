@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import CalculatorButton from "./Calculator-Button";
-import "./styles.css";
+import { useEffect, useState } from "react"
+import CalculatorButton from "./Calculator-Button"
+import "./styles.css"
 
 export default function Calculator() {
-  const rowsOfNumbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]];
-  const operations = ["CE", "+", "-", "÷", "x", "="];
+  const rowsOfNumbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
+  const operations = ["CE", "+", "-", "÷", "x", "="]
   const initialOperationState = {
     number1: 0,
     number2: 0,
@@ -12,36 +12,36 @@ export default function Calculator() {
     result: 0,
     isFirstAdded: false,
     isSecondAdded: false,
-  };
+  }
   const [operationProcess, setOperationProcess] = useState(
     initialOperationState
-  );
-  const [calculatorOutput, setCalculatorOutput] = useState("0");
+  )
+  const [calculatorOutput, setCalculatorOutput] = useState("0")
 
   useEffect(() => {
     if (operationProcess.isSecondAdded) {
-      setCalculatorOutput(String(operationProcess.result));
-      setOperationProcess(initialOperationState);
+      setCalculatorOutput(String(operationProcess.result))
+      setOperationProcess(initialOperationState)
     }
-  }, [operationProcess]);
+  }, [operationProcess])
 
-  const writeNumber = (e) => {
-    e.stopPropagation();
+  const writeNumber = (e: any) => {
+    e.stopPropagation()
     if (calculatorOutput === "0") {
       if (e.target.innerText == "0") {
-        setCalculatorOutput("0");
+        setCalculatorOutput("0")
       } else {
-        setCalculatorOutput(e.target.innerText);
+        setCalculatorOutput(e.target.innerText)
       }
-    } else setCalculatorOutput((prev) => prev + e.target.innerText);
-  };
+    } else setCalculatorOutput((prev) => prev + e.target.innerText)
+  }
 
-  const performOperation = (e) => {
+  const performOperation = (e: any) => {
     switch (e.target.innerText) {
       case "CE":
-        setOperationProcess(initialOperationState);
-        setCalculatorOutput("0");
-        break;
+        setOperationProcess(initialOperationState)
+        setCalculatorOutput("0")
+        break
       case "+":
       case "-":
       case "÷":
@@ -51,9 +51,9 @@ export default function Calculator() {
           number1: parseInt(calculatorOutput),
           operation: e.target.innerText,
           isFirstAdded: true,
-        });
-        setCalculatorOutput("0");
-        break;
+        })
+        setCalculatorOutput("0")
+        break
       default:
         if (operationProcess.isFirstAdded) {
           switch (operationProcess.operation) {
@@ -63,36 +63,36 @@ export default function Calculator() {
                 number2: parseInt(calculatorOutput),
                 isSecondAdded: true,
                 result: operationProcess.number1 + parseInt(calculatorOutput),
-              });
-              break;
+              })
+              break
             case "-":
               setOperationProcess({
                 ...operationProcess,
                 number2: parseInt(calculatorOutput),
                 isSecondAdded: true,
                 result: operationProcess.number1 - parseInt(calculatorOutput),
-              });
-              break;
+              })
+              break
             case "÷":
               setOperationProcess({
                 ...operationProcess,
                 number2: parseInt(calculatorOutput),
                 isSecondAdded: true,
                 result: operationProcess.number1 / parseInt(calculatorOutput),
-              });
-              break;
+              })
+              break
             case "x":
               setOperationProcess({
                 ...operationProcess,
                 number2: parseInt(calculatorOutput),
                 isSecondAdded: true,
                 result: operationProcess.number1 * parseInt(calculatorOutput),
-              });
-              break;
+              })
+              break
           }
         }
     }
-  };
+  }
 
   return (
     <div className="Calculator">
@@ -104,7 +104,7 @@ export default function Calculator() {
             {rowsOfNumbers.map((row) => (
               <div className="button-row">
                 {row.map((calcNumber) => (
-                  <CalculatorButton handleClick={(e) => writeNumber(e)}>
+                  <CalculatorButton handleClick={(e: any) => writeNumber(e)}>
                     {calcNumber}
                   </CalculatorButton>
                 ))}
@@ -121,5 +121,5 @@ export default function Calculator() {
         </div>
       </div>
     </div>
-  );
+  )
 }
