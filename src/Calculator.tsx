@@ -5,6 +5,7 @@ import "./styles.css"
 export default function Calculator() {
   const rowsOfNumbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
   const operations = ["CE", "+", "-", "÷", "x", "="]
+
   const initialOperationState = {
     number1: 0,
     number2: 0,
@@ -27,13 +28,19 @@ export default function Calculator() {
 
   const writeNumber = (e: any) => {
     e.stopPropagation()
-    if (calculatorOutput === "0") {
-      if (e.target.innerText == "0") {
-        setCalculatorOutput("0")
-      } else {
-        setCalculatorOutput(e.target.innerText)
-      }
-    } else setCalculatorOutput((prev) => prev + e.target.innerText)
+    if (calculatorOutput !== "0") {
+      setCalculatorOutput((prev) => prev + e.target.innerText)
+      return
+    }
+    if (e.target.innerText === "0") {
+      setCalculatorOutput("0")
+      return
+    }
+    if (e.target.innerText === "." && calculatorOutput === "0") {
+      setCalculatorOutput("0" + e.target.innerText)
+      return
+    }
+    setCalculatorOutput(e.target.innerText)
   }
 
   const performOperation = (e: any) => {
