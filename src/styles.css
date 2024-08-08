@@ -3,35 +3,66 @@
   text-align: center;
 }
 
+body {
+  background-color: rgba(80, 160, 240, 0.5);
+}
+
 @media (width < 1024px) {
   .Calculator {
-    position: absolute;
-    top: 25%;
     width: 100%;
     margin: auto;
     font-family: sans-serif;
+  }
+
+  .calculator-button {
+    border: 1px solid rgb(0, 200, 100, 1);
+    border-radius: 25%;
+    box-shadow: 5px 5px 10px rgb(1, 1, 1, 0.5);
+    padding: 1.4rem;
+    margin: 0.5rem;
+    font-size: 1.3rem;
+    background-color: rgb(0, 200, 100, 1);
+  }
+  .calculator-border {
+    width: 20em;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 5%;
+    box-shadow: 5px 5px 10px rgb(1, 1, 1, 0.5);
+    padding: 20px;
+    background-color: rgb(0, 100, 50, 1);
   }
 }
 
 @media (width >= 1024px) {
   .Calculator {
-    position: absolute;
-    top: 10%;
     width: 100%;
     margin: auto;
     font-family: sans-serif;
+  }
+
+  .calculator-button {
+    border: 1px solid rgb(0, 200, 100, 1);
+    border-radius: 25%;
+    box-shadow: 5px 5px 10px rgb(1, 1, 1, 0.5);
+    padding: 20px;
+    margin: 0.2rem;
+    font-size: 1.3rem;
+    background-color: rgb(0, 200, 100, 1);
+  }
+  .calculator-border {
+    width: 18em;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 5%;
+    box-shadow: 5px 5px 10px rgb(1, 1, 1, 0.5);
+    padding: 20px;
+    background-color: rgb(0, 100, 50, 1);
   }
 }
 
 .greeting {
   text-align: center;
-}
-
-.calculator-border {
-  width: 18em;
-  margin: auto;
-  border: 1px solid black;
-  padding: 20px;
 }
 
 .calculator-content {
@@ -64,13 +95,6 @@
   justify-content: center;
 }
 
-.calculator-button {
-  border: 1px solid black;
-  padding: 20px;
-  margin: 0.2rem;
-  font-size: 1.3rem;
-}
-
 .calculator-button:active {
   background-color: rgb(1, 1, 1, 0.5);
 }
@@ -81,12 +105,14 @@
   margin-bottom: 1rem;
   width: 100%;
 }
+
 .calculator-result {
-  background-color: green;
+  background-color: rgb(0, 180, 180, 1);
   width: 100%;
   padding: 10px;
   display: flex;
   justify-content: right;
+  border-radius: 1rem;
 }
 
 .calculator-result p {
