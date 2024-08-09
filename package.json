@@ -1,12 +1,14 @@
 {
-  "name": "react-typescript",
-  "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
+  "name": "react-typescript-calculator",
+  "version": "1.0.1",
+  "author": "Fernando Martínez",
+  "description": "Calculator made with React and TypeScript",
   "homepage": "https://fermtz94.github.io/calculator-react-project/",
   "keywords": [
     "typescript",
     "react",
-    "starter"
+    "starter",
+    "calculator"
   ],
   "main": "src/index.tsx",
   "dependencies": {
