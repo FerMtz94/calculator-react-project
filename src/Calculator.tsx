@@ -1,46 +1,88 @@
 import { useEffect, useState } from "react"
 import CalculatorButton from "./Calculator-Button"
+import Result from "./Result"
 import "./styles.css"
 
 export default function Calculator() {
-  const rowsOfNumbers = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]
+  const rowsOfNumbers = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [0, "."],
+  ]
   const operations = ["CE", "+", "-", "÷", "x", "="]
 
   const initialOperationState = {
-    number1: 0,
-    number2: 0,
+    numbers: [] as number[],
     operation: "",
-    result: 0,
-    isFirstAdded: false,
-    isSecondAdded: false,
   }
   const [operationProcess, setOperationProcess] = useState(
     initialOperationState
   )
   const [calculatorOutput, setCalculatorOutput] = useState("0")
+  const [isFirstType, setIsFirstType] = useState(true)
 
   useEffect(() => {
-    if (operationProcess.isSecondAdded) {
-      setCalculatorOutput(String(operationProcess.result))
-      setOperationProcess(initialOperationState)
+    const canPerformOperation =
+      operationProcess.numbers.length >= 2 &&
+      operationProcess.operation.length > 0
+
+    if (canPerformOperation) {
+      const operationResult = operationProcess.numbers.reduce(
+        (accumulatedValue, current) => {
+          switch (operationProcess.operation) {
+            case "+":
+              return accumulatedValue + current
+            case "-":
+              return accumulatedValue - current
+            case "÷":
+              return accumulatedValue / current
+            default:
+              return accumulatedValue * current
+          }
+        }
+      )
+
+      setOperationProcess({
+        ...operationProcess,
+        numbers: [operationResult],
+        // operation: "",
+      })
+
+      setCalculatorOutput(String(operationResult))
+      setIsFirstType(true)
+
+      console.log(operationProcess)
     }
   }, [operationProcess])
 
   const writeNumber = (e: any) => {
     e.stopPropagation()
-    if (calculatorOutput !== "0") {
-      setCalculatorOutput((prev) => prev + e.target.innerText)
+    const buttonText = e.target.innerText
+
+    if (calculatorOutput.includes(".") && buttonText === ".") {
       return
     }
-    if (e.target.innerText === "0") {
-      setCalculatorOutput("0")
+    if (calculatorOutput === "0") {
+      if (buttonText === "0") {
+        return
+      }
+      if (buttonText === ".") {
+        setCalculatorOutput((prev) => prev + buttonText)
+        setIsFirstType(false)
+        return
+      }
+      setCalculatorOutput(buttonText)
+      setIsFirstType(false)
       return
     }
-    if (e.target.innerText === "." && calculatorOutput === "0") {
-      setCalculatorOutput("0" + e.target.innerText)
+
+    if (isFirstType) {
+      setCalculatorOutput(buttonText)
+      setIsFirstType(false)
       return
     }
-    setCalculatorOutput(e.target.innerText)
+    setCalculatorOutput((prev) => prev + buttonText)
   }
 
   const performOperation = (e: any) => {
@@ -48,70 +90,73 @@ export default function Calculator() {
       case "CE":
         setOperationProcess(initialOperationState)
         setCalculatorOutput("0")
+        setIsFirstType(true)
         break
       case "+":
       case "-":
       case "÷":
       case "x":
-        setOperationProcess({
-          ...operationProcess,
-          number1: parseInt(calculatorOutput),
-          operation: e.target.innerText,
-          isFirstAdded: true,
+        setOperationProcess((prev) => {
+          if (
+            prev.numbers[prev.numbers.length - 1] !==
+            parseFloat(calculatorOutput)
+          ) {
+            return {
+              ...operationProcess,
+              numbers: [
+                ...operationProcess.numbers,
+                parseFloat(calculatorOutput),
+              ],
+              operation: e.target.innerText,
+            }
+          }
+          return {
+            ...operationProcess,
+            numbers: [...operationProcess.numbers],
+            operation: e.target.innerText,
+          }
         })
         setCalculatorOutput("0")
         break
-      default:
-        if (operationProcess.isFirstAdded) {
-          switch (operationProcess.operation) {
-            case "+":
-              setOperationProcess({
-                ...operationProcess,
-                number2: parseInt(calculatorOutput),
-                isSecondAdded: true,
-                result: operationProcess.number1 + parseInt(calculatorOutput),
-              })
-              break
-            case "-":
-              setOperationProcess({
-                ...operationProcess,
-                number2: parseInt(calculatorOutput),
-                isSecondAdded: true,
-                result: operationProcess.number1 - parseInt(calculatorOutput),
-              })
-              break
-            case "÷":
-              setOperationProcess({
-                ...operationProcess,
-                number2: parseInt(calculatorOutput),
-                isSecondAdded: true,
-                result: operationProcess.number1 / parseInt(calculatorOutput),
-              })
-              break
-            case "x":
-              setOperationProcess({
-                ...operationProcess,
-                number2: parseInt(calculatorOutput),
-                isSecondAdded: true,
-                result: operationProcess.number1 * parseInt(calculatorOutput),
-              })
-              break
+      case "=":
+        setOperationProcess((prev) => {
+          if (
+            prev.numbers[prev.numbers.length - 1] !==
+            parseFloat(calculatorOutput)
+          ) {
+            return {
+              ...operationProcess,
+              numbers: [
+                ...operationProcess.numbers,
+                parseFloat(calculatorOutput),
+              ],
+              operation: operationProcess.operation,
+            }
           }
-        }
+          return {
+            ...operationProcess,
+            numbers: [...operationProcess.numbers],
+            operation: operationProcess.operation,
+          }
+        })
+        console.log(operationProcess)
+        break
     }
   }
 
   return (
     <div className="Calculator">
-      <h1 style={{ textAlign: "center" }}>Welcome to the calculator app!</h1>
       <div className="calculator-border">
-        <div className="calculator-result">{calculatorOutput}</div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div className="calculator-column">
+        <Result calculatorOutput={calculatorOutput} />
+        <div className="calculator-content">
+          <div className="calculator-numbers">
             {rowsOfNumbers.map((row) => (
               <div className="button-row">
                 {row.map((calcNumber) => (
-                  <CalculatorButton handleClick={(e: any) => writeNumber(e)}>
+                  <CalculatorButton
+                    key={calcNumber}
+                    handleClick={(e: any) => writeNumber(e)}
+                  >
                     {calcNumber}
                   </CalculatorButton>
                 ))}
@@ -120,7 +165,10 @@ export default function Calculator() {
           </div>
           <div className="calculator-column">
             {operations.map((operation) => (
-              <CalculatorButton handleClick={(e) => performOperation(e)}>
+              <CalculatorButton
+                key={operation}
+                handleClick={(e) => performOperation(e)}
+              >
                 {operation}
               </CalculatorButton>
             ))}
